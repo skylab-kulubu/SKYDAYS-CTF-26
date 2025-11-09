@@ -1,6 +1,11 @@
 import random
 
-FLAG = "skydays{bu_bir_hacklenmis_slot_makinesi_algoritmasi}"
+def oku_flag():
+    try:
+        with open("flag.txt", "r") as f:
+            return f.read().strip()
+    except Exception:
+        return "Flag dosyası bulunamadı!"
 
 def slot_cheater_ctf():
     bakiye = 100
@@ -53,7 +58,7 @@ def slot_cheater_ctf():
 
     if bakiye >= 1000:
         print("\n🏆 TEBRİKLER! Makinenin sırrını çözdünüz ve kasayı boşalttınız!")
-        print(f"🔑 Bayrağınız: {FLAG}")
+        print(f"🔑 Bayrağınız: {oku_flag()}")
     else:
         print("\nOyun Bitti. Bakiyeniz tükendi. İyi şanslar bir dahaki sefere!")
 
