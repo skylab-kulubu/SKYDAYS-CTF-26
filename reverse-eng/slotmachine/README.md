@@ -8,7 +8,7 @@ Hoş geldin! Bu makinede gerçek şans, zeka ve biraz da "hile" birleşiyor.
 
 Başlangıç bakiyen: **100$**  
 Hedefin: **1000$'a ulaşmak**  
-Ama herkes şanslı olamaz... Gerçek kazananlar, sistemin sırrını çözenlerdir.
+Ama herkes şansla kazanamaz... Gerçek kazananlar, sistemin sırrını çözenlerdir.
 
 ---
 
