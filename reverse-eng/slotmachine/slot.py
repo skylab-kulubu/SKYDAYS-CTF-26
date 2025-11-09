@@ -12,7 +12,7 @@ def slot_cheater_ctf():
         seed_input = sum(ord(char) for char in isim)
         seed_degeri = seed_input % 256
     except Exception:
-        print("Geçersiz giriş. Çıkılıyor.")
+        print("Geçersiz giriş. Oyun sonlandırıldı.")
         return
 
     random.seed(seed_degeri)
