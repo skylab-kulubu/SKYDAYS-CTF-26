@@ -19,17 +19,8 @@
         (click)="checkAnswer(i, answerInput.value)" 
         [disabled]="!isActive(i) || q.isCorrect"
       >
-        Check
+        Kontrol Et
       </button>
-
-      <span 
-        *ngIf="q.id === 1"
-        class="download-icon"
-        (click)="downloadWordlist()"
-        title="download custom_wordlist.txt"
-      >
-        ⬇
-      </span>
     </div>
   </div>
 

@@ -20,13 +20,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
 
 app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseAuthorization();
-
-app.UseCors("AllowAll");
 
 app.MapControllers();
 

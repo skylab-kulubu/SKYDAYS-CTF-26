@@ -10,7 +10,7 @@ public class AnswerRepository
 
     public bool TestAnswer(AnswerDto answerDto)
     {
-        if (answerDto.Id == 5)
+        if (answerDto.Id == 4)
         {
             answerDto.Answer = answerDto.Answer.ToLower();
         }
@@ -19,14 +19,12 @@ public class AnswerRepository
         switch (answerDto.Id)
         {
             case 1:
-                return hash.Equals("e09737f3bea32bd098128f6219cccb71496441856b23fc6f0de23c34f1ec1ab7");
+                return hash.Equals("21e24008bebacdb80e432d2435c62ad3b007a05387177ecebde0f023f6f65745");
             case 2:
-                return hash.Equals("0fd3e4e71b62f7775696d50033366d824247be4337d7f35f9026c00d920e423f");
-            case 3:
                 return hash.Equals("edcbb4277dbfa19a0fcc82f4328c4afd261f333efda92e664c7cc5b547442a51");
-            case 4:
+            case 3:
                 return hash.Equals("c6d5ed757b66bfd3147a10410e0922b701baf55c401a1491e314d65fba08d15d");
-            case 5:
+            case 4:
                 return hash.Equals("c71a6279e861d8c5fd032f8835b98cff63fabc872038d452b3f70bf2951da7d0");
             default:
                 return false;
@@ -43,7 +41,7 @@ public class AnswerRepository
                 return "";
             }
 
-            if (dto.Id == 5)
+            if (dto.Id == 4)
             {
                 dto.Answer = dto.Answer.ToLower();
             }
