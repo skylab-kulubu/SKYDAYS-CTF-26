@@ -11,11 +11,10 @@ import { CommonModule, NgFor } from '@angular/common';
 })
 export class HomePage {
   questions: (Question & { isCorrect?: boolean })[] = [
-    new Question(1, 'What is the secret route?', '/******-*****', ''),
-    new Question(2, 'What is the abbreviation that you got from the numbers in secret route?', '***', ''),
-    new Question(3, 'What is the secret url?', 'https://hub.docker.com/r/*******/*******************/****', ''),
-    new Question(4, 'What is the secret minecraft players name?', '*****', ''),
-    new Question(5, 'This player has a Youtube channel, when was this channel started?', '******** *, ****', '')
+    new Question(1, 'What is the secret route?', '/********', ''),
+    new Question(2, 'What is the secret url?', 'https://hub.docker.com/r/*******/*******************/****', ''),
+    new Question(3, 'What is the secret minecraft players name?', '*****', ''),
+    new Question(4, 'This player has a Youtube channel, when was this channel started?', '******** *, ****', '')
   ];
 
   currentQuestionIndex: number = 0;
@@ -24,13 +23,6 @@ export class HomePage {
 
   constructor() {
     this.loadAnswers();
-  }
-
-  downloadWordlist() {
-    const link = document.createElement('a');
-    link.href = 'custom_wordlist.txt';
-    link.download = 'custom_wordlist.txt';
-    link.click();
   }
 
   async checkAnswer(index: number, answer: string) {

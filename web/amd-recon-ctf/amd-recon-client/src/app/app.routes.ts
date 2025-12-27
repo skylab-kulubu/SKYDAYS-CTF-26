@@ -4,5 +4,5 @@ import { SecretPage } from './secret-page/secret-page';
 
 export const routes: Routes = [
     { path: '', component: HomePage },
-    { path: '657768-rules', component: SecretPage }
+    { path: 'hitcount', component: SecretPage }
 ];
