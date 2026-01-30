@@ -1,4 +1,5 @@
 <?php
+    error_reporting(0);
     session_start();
     $admin_password = bin2hex(random_bytes(16));
     
