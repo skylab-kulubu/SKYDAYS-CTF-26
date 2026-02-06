@@ -190,10 +190,6 @@ const Dashboard: React.FC = () => {
             <li>Network connection: <code aria-label={error ? "Failed" : "Connected"}>{error ? 'FAILED' : 'OK'}</code></li>
             <li>Evidence integrity: <code aria-label="Verified">VERIFIED</code></li>
           </ul>
-          <small>
-            Bu sistem educational purposes için tasarlanmıştır. 
-            Gerçek security implementation'ı değildir.
-          </small>
         </div>
       </aside>
     </div>
