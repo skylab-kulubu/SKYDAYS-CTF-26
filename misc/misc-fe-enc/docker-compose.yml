@@ -1,4 +1,4 @@
-# Docker Compose configuration for CTF application
+# Docker Compose configuration for CTF application - Brooklyn 99 Heist Frontend
 version: '3.8'
 
 services:
@@ -8,7 +8,45 @@ services:
       context: .
       dockerfile: Dockerfile
       target: production
-    ports:
-      - "127.0.0.1:80:80"
-    restart: unless-stopped
+      # Build args for flexibility
+      args:
+        - BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+        - VCS_REF=$(git rev-parse --short HEAD)
+    image: brooklyn99-heist:latest
     container_name: client-site-enc-prod
+    ports:
+      # Listen on localhost only for security (change if needed)
+      - "127.0.0.1:${APP_PORT:-80}:80"
+    restart: unless-stopped
+    # Health check configuration
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/index.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    # Resource limits for container
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+        reservations:
+          cpus: '0.5'
+          memory: 128M
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "container=client-site-enc-prod"
+    # Environment variables
+    environment:
+      - TZ=${TZ:-UTC}
+    labels:
+      - "com.example.description=Brooklyn 99 Heist - CTF Frontend"
+      - "com.example.version=1.0.0"
