@@ -5,6 +5,7 @@ RUN /usr/sbin/useradd --no-create-home -u 1000 user
 RUN apt-get update
 
 COPY flag.txt /home/user/
+COPY secret /home/user/
 COPY chal /home/user/
 
 FROM gcr.io/kctf-docker/challenge:latest
