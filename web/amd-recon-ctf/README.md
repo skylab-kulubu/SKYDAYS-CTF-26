@@ -21,27 +21,22 @@
 
 2. **Gobuster ile tara:**
    ```text
-   /657768-rules
+   /hitcount
    ```
 
-3. **ASCII tablosuna kullanarak çöz:**
-   ```text
-   AMD
-   ```
-
-5. **Secret URL'e git:**
+3. **Secret URL'e git:**
    ```link
    https://hub.docker.com/r/amahird/reckon-mock-backend/tags
    ```
 
-6. **Docker Image'i İncele:**
+4. **Docker Image'i İncele:**
    ```text
    - "docker pull amahird/reckon-mock-backend:latest"
    - Windows: "docker inspect amahird/reckon-mock-backend --format='{{json .Config.Env}}' | ConvertFrom-Json"
    - Linux: "docker inspect amahird/reckon-mock-backend --format='{{json .Config.Env}}' | jq"
    ```
 
-7. **Youtube Kanalını İncele:**
+5. **Youtube Kanalını İncele:**
    ```sh
    February 8, 2014
    ```
