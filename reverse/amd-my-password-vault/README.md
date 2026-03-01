@@ -1,6 +1,6 @@
 ### Yarışmacıya Verilecek Bilgiler/Dosyalar
 
-    * /Executables altındaki 2 adet dosya
+    * /Executables altındaki dosya
 
 ### Yarışmacıya Verilebilecek İpuçları
     * .exe içeriğine ulaşmak için SingleFileExtractor kullan (Maliyet: ~%10)
