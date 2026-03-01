@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { baseUrl } from '../models/BaseUrl';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  apiUrl = `${environment.backendUrl}/api/auth`
+  apiName = 'auth';
 
   constructor(private http: HttpClient) {}
 
   login(loginRequest: LoginRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, loginRequest);
+    return this.http.post<any>(`${baseUrl}/${this.apiName}/login`, loginRequest);
   }
 
   register(registerRequest: RegisterRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, registerRequest);
+    return this.http.post<any>(`${baseUrl}/${this.apiName}/register`, registerRequest);
   }
 
   vipRegister(registerRequest: RegisterRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/VIPRegister`, registerRequest);
+    return this.http.post<any>(`${baseUrl}/${this.apiName}/VIPRegister`, registerRequest);
   }
 }
