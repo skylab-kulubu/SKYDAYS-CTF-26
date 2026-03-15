@@ -13,7 +13,7 @@ const int BUFFER_SIZE = 1024;
 const char* flag = "SKYDAYS{k4nc4n4_dustum}";
 const char* fail = "Nice try!";
 
-void handle_client(int client_socket, std::string client_ip)
+void handle_client(int client_socket, const std::string& client_ip)
 {
     char buffer[BUFFER_SIZE]{};
     ssize_t valread;
@@ -24,6 +24,7 @@ void handle_client(int client_socket, std::string client_ip)
 
     if (valread > 0) 
     {
+        buffer[valread] = '\0';
         printf("[%s] HWID: %s\n", client_ip.c_str(), buffer);
         if (strcmp(buffer, "abcdef01e40eow") == 0)
         {
