@@ -6,21 +6,28 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <sys/time.h>
 #include <netinet/in.h>
+#include <chrono>
 
 const int PORT = 8080;
 const int BUFFER_SIZE = 1024;
 const char* flag = "SKYDAYS{k4nc4n4_dustum}";
 const char* fail = "Nice try!";
 
-void handle_client(int client_socket, const std::string& client_ip)
+void handle_client(int client_socket, std::string client_ip)
 {
     char buffer[BUFFER_SIZE]{};
     ssize_t valread;
 
+    struct timeval tv;
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+
     printf("[%s] connected.\n", client_ip.c_str());
 
-    valread = recv(client_socket, buffer, BUFFER_SIZE, 0);
+    valread = recv(client_socket, buffer, BUFFER_SIZE - 1, 0);
 
     if (valread > 0) 
     {
@@ -32,6 +39,7 @@ void handle_client(int client_socket, const std::string& client_ip)
         }
         else
         {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
             send(client_socket, fail, strlen(fail), 0);
         }
     }
