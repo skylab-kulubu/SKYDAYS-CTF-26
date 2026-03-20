@@ -1,10 +1,14 @@
-### Yarışmacıya Verilecek Bilgiler/Dosyalar
+# Password Vault
 
+### Yarışmacıya Verilecek Dosyalar
     * /Executables altındaki dosya
 
+### Soru Açıklaması
+	* Windows'da çözülmesi tavsiye edilir
+
 ### Yarışmacıya Verilebilecek İpuçları
-    * .exe içeriğine ulaşmak için SingleFileExtractor kullan (Maliyet: ~%10)
-    * Elde ettiğin .dll dosyasını DnSpy ile incele (Maliyet: ~%10)
+    * .exe içeriğine ulaşmak için SingleFileExtractor kullan (Maliyet: %35)
+    * Elde ettiğin .dll dosyasını DnSpy ile incele (Maliyet: %30)
 
 ### Çözüm
 
