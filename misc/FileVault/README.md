@@ -1,4 +1,4 @@
-## SKYDAYS26 - FileVault
+# FileVault
 
 ### Çözüm
 
