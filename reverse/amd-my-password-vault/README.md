@@ -7,8 +7,8 @@
 	* Windows'da çözülmesi tavsiye edilir
 
 ### Yarışmacıya Verilebilecek İpuçları
-    * .exe içeriğine ulaşmak için SingleFileExtractor kullan (Maliyet: ~%35)
-    * Elde ettiğin .dll dosyasını DnSpy ile incele (Maliyet: ~%35)
+    * .exe içeriğine ulaşmak için SingleFileExtractor kullan (Maliyet: %35)
+    * Elde ettiğin .dll dosyasını DnSpy ile incele (Maliyet: %30)
 
 ### Çözüm
 
