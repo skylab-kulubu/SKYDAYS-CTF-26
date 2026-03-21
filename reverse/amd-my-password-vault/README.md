@@ -10,7 +10,7 @@
 
 **Zorluk:** Easy-Medium
 
-**Bayrak:** `SKYDAYS{}`
+**Bayrak:** `SKYDAYS{5eluR-gnir3en1gn3-e5rev3R}`
 
 ---
 
@@ -22,7 +22,7 @@
     * Elde ettiğin .dll dosyasını DnSpy ile incele (Maliyet: %30)
 
 ## 4. Çözüm
-	* Video: Drive Linki eklenicek
+	* Video: https://drive.google.com/drive/folders/1UoWB8aE93xPvIwPt2QWSKykFjU_4g2FR?usp=sharing
 	* Yarışmacı DIE ile .NET Framework olduğunu keşfeder
     * Yarışmacı SingleFileExtractor ile exe dosyasını açar
     * .Çıktılar arasından amd-my-password-vault.dll dosyasını DnSpy ile inceler
