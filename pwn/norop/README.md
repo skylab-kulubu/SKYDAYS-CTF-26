@@ -3,7 +3,7 @@ docker calistir:
 ```
 docker build -t norop .
 
-docker run --privileged -p 1337:1337 norop
+docker run --privileged --name norop --cap-add=SYS_PTRACE -p 1339:1339 -d norop
 ```
 
 Bu soru için not (yarışmacıya verilecek):
