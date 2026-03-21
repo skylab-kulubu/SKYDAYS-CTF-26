@@ -25,7 +25,6 @@
 [Drive](https://drive.google.com/drive/folders/1UoWB8aE93xPvIwPt2QWSKykFjU_4g2FR?usp=sharing)
 
 ## 5. Çözüm
-	* Video: https://drive.google.com/drive/folders/1UoWB8aE93xPvIwPt2QWSKykFjU_4g2FR?usp=sharing
 	* Yarışmacı DIE ile .NET Framework olduğunu keşfeder
     * Yarışmacı SingleFileExtractor ile exe dosyasını açar
     * .Çıktılar arasından amd-my-password-vault.dll dosyasını DnSpy ile inceler
