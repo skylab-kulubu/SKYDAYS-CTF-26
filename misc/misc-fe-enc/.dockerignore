@@ -1,0 +1,68 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Build outputs
+dist
+build
+.tsbuildinfo
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+.env.local
+.env.*.local
+
+# Keep these for build (needed by tsc and vite)
+# tsconfig*.json - REQUIRED for build
+# vite.config.ts - REQUIRED for build
+
+# Development files (but we need some at build time)
+public
+*.config.js
+
+# Documentation
+*.md
+AGENTS.md
+PRD.MD
+SOLUTION.md
+README.md
+
+# Test files
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.circleci
+
+# Docker files
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Python files (solution scripts)
+solution.py
+requiriments.txt
+*.pyc
+__pycache__
+
+# Misc
+.editorconfig
+.prettierrc
+.babelrc
+

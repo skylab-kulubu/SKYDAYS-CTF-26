@@ -1,0 +1,1 @@
+New version of CTFd stored in another repository => https://github.com/skylab-kulubu/SKYDAYS-26-CTFd
