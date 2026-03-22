@@ -49,7 +49,7 @@ public class AnswerRepository
         var p2 = hash.Substring(hash.Length / 2, 4);
         var p3 = hash.Substring(hash.Length - 4, 4);
 
-        var flag = $"SKYDAYS26{{{p1}-{p2}-{p3}}}";
+        var flag = $"SKYDAYS{{{p1}-{p2}-{p3}}}";
         return flag;
     }
 
