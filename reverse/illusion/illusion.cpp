@@ -92,6 +92,8 @@ int main()
     }
 
     std::cout << "Congrats!" << std::endl;
-  
+    std::cin.get();
+    std::cin.get();
+    
     return 0;
 }
