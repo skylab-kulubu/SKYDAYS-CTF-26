@@ -1,30 +1,40 @@
-# Recon
+# Recon - CTF Challenge Dokumantasyonu
 
-### Çözüm
+## 1. Soru Meta Verileri
 
-1. **Ana Sayfa'ya git:**
+**Soru Adi:** Recon
+
+**Kategori:** Web
+
+**Zorluk:** Easy
+
+**Bayrak:** `SKYDAYS{e587-b32f-3b72}`
+
+---
+
+## 2. Çözüm Video
+[Drive](https://drive.google.com/drive/folders/1UoWB8aE93xPvIwPt2QWSKykFjU_4g2FR?usp=sharing)
+
+## 3. Çözüm
+
+1. **What is the secret route?:**
    ```sh
-   http://recon.ctf
+   ffuf -w /usr/share/seclists/Discovery/Web-Content/common.txt -u https://recon.skydays.ctf/FUZZ -c -v
    ```
 
-2. **Gobuster ile tara:**
+2. **What is the secret url?:**
    ```text
-   /hitcount
+   ffuf sonucunda bulunan yola git ve ordan url'i al
    ```
 
-3. **Secret URL'e git:**
+3. **What is the secret minecraft players name?:**
    ```link
-   https://hub.docker.com/r/amahird/reckon-mock-backend/tags
+   - docker pull amahird/reckon-mock-backend:latest
+   - Windows --> docker inspect amahird/reckon-mock-backend --format='{{json .Config.Env}}' | ConvertFrom-Json
+   - Linux --> docker inspect amahird/reckon-mock-backend --format='{{json .Config.Env}}' | jq
    ```
 
-4. **Docker Image'i İncele:**
+4. **This player has a Youtube channel, when was this channel started?:**
    ```text
-   - "docker pull amahird/reckon-mock-backend:latest"
-   - Windows: "docker inspect amahird/reckon-mock-backend --format='{{json .Config.Env}}' | ConvertFrom-Json"
-   - Linux: "docker inspect amahird/reckon-mock-backend --format='{{json .Config.Env}}' | jq"
-   ```
-
-5. **Youtube Kanalını İncele:**
-   ```sh
-   February 8, 2014
+   Oyuncunun youtube kanalına giderek ayrıntılara bak
    ```
