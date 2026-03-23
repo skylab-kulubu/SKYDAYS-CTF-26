@@ -1,8 +1,8 @@
-# Password Vault - CTF Challenge Dokumantasyonu
+# My Password Vault - CTF Challenge Dokumantasyonu
 
 ## 1. Soru Meta Verileri
 
-**Soru Adi:** Password Vault
+**Soru Adi:** My Password Vault
 
 **Soru Aciklamasi:** Windows'da çözülmesi tavsiye edilir
 
