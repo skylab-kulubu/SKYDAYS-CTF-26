@@ -1,6 +1,18 @@
-# FileVault
+# File Vault - CTF Challenge Dokumantasyonu
 
-### Çözüm
+## 1. Soru Meta Verileri
+
+**Soru Adi:** File Vault
+
+**Kategori:** Misc
+
+**Zorluk:** Hard
+
+**Bayrak:** `SKYDAYS{f1l3_v4ul7_0wn3d_7a2b9c1f}`
+
+---
+
+## 2. Çözüm
 
 1. **Kayıt Ol:**
    ```sh
@@ -68,11 +80,6 @@
     catch {
         Write-Error "Hata: Base64 verisi hala geçersiz. Mesaj: $_"
     }
-   ```
-
-9. **FileVault.Server.dll dosyasını oluşturma (Linux):**
-   ```sh
-    
    ```
 
 10. **FileVault.Server.dll dosyasını okuma:**
