@@ -12,7 +12,10 @@
 
 ---
 
-## 2. Çözüm
+## 2. Çözüm Video
+[Drive](https://drive.google.com/drive/folders/1UoWB8aE93xPvIwPt2QWSKykFjU_4g2FR?usp=sharing)
+
+## 3. Çözüm
 
 1. **Kayıt Ol:**
    ```sh
