@@ -25,7 +25,3 @@ Bu senaryo kapsamında katılımcılardan aşağıdaki alanlarda yetkinlik göst
 * `platform934.jpg`
 * Açıklama Metni (İçerisinde veri gizlenmiş ZWC barındıran UTF-8 dizesi)
 
-## Kurallar ve Uyarılar
-
-* **Brute-Force Yasaktır:** Sorunun çözüm adımlarında yer alan hiçbir şifreleme veya kilit mekanizması için kaba kuvvet (brute-force) saldırısı yapılmasına gerek yoktur. Gerekli parolalar bir önceki adımın OSINT analizi ile elde edilebilir formattadır. Sunuculara veya hedef platformlara yönelik tarama araçları (dirb, hydra vb.) kullanmak diskalifiye sebebidir.
-* Tüm adımlar standart analiz araçları (Wireshark, CyberChef, Git CLI vb.) kullanılarak veya özel Python scriptleri yazılarak çözülebilir.
