@@ -44,7 +44,7 @@ const upload = multer({
         }
     }
 });
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 
 app.set("view engine","ejs");  //ejs'i tanıtıyoruz. Ejs default olarak views klasöründe arar htmlleri falan. Eger klasörün ismini farklı koymak istiyorsan ayrıca belirtmen lazım biz views kullanalım.
@@ -280,7 +280,7 @@ app.use((req,res)=>{
 );
 
 app.listen(port,()=>{
-    console.log('Server 3000 portunda çalışıyor');
+    console.log('Server ${port} portunda çalışıyor');
 });
 
 
