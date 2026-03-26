@@ -40,7 +40,7 @@ const upload = multer({
         if (allowedMimeTypes.includes(file.mimetype) && allowedExts.includes(fileExt)) {
             cb(null, true);
         } else {
-            cb(new Error('Gecersiz dosya tipi veya uzantisi!'), false);
+            cb(new Error('Geçersiz dosya tipi veya uzantisi!'), false);
         }
     }
 });
@@ -108,14 +108,20 @@ app.get('/register',(req,res)=>{
 });
 
 app.get('/home',requireLogin,async(req,res)=>{
-    const sortBy = req.query.sort_by || 'id';
+    let sortBy = req.query.sort_by || 'id';
     let aranan_kelime = req.query.query || '';
+
+    const allowedSortFields = ['id', 'artist', 'song_title'];
+
+    if (!allowedSortFields.includes(sortBy)) {
+        sortBy = 'id'; 
+    }
 
     if (aranan_kelime.includes(' ')){
         return res.status(403).send("<h1>WAF Engeli:</h1> Boşluk karakteri güvenlik nedeniyle yasaklanmiştir!");
     };
 
-    const blacklist = ['UNION', 'OR', 'SELECT', 'JOIN','unıon','select','or','union','UNİON'];
+    const blacklist = ['UNION', 'SELECT', 'JOIN','unıon','select','union','UNİON'];
     if (blacklist.some(word => aranan_kelime.includes(word))) {
         return res.status(403).send("<h1>WAF Engeli:</h1> Şüpheli SQL anahtar kelimesi tespit edildi!");
     };
@@ -134,7 +140,7 @@ app.get('/home',requireLogin,async(req,res)=>{
 
     }
     catch(err){
-        res.status(500).send("ERROR"+err.message);
+        res.status(500).send("ERROR:"+err.message);
     }
 });
 
@@ -148,11 +154,11 @@ app.post('/register',async(req,res)=>{
     }
 
     if (password.length<6){
-        hatalar.push({hata_mesaji:"Parola en az 6 karakterli olmaidir!"});
+        hatalar.push({hata_mesaji:"Parola en az 6 karakterli olmalidir!"});
     }
 
     if (password != password_check){
-        hatalar.push({hata_mesaji:"Parolalar uyusmuyor!"});
+        hatalar.push({hata_mesaji:"Parolalar uyuşmuyor!"});
     }
 
     if (hatalar.length>0){                                    
@@ -164,10 +170,17 @@ app.post('/register',async(req,res)=>{
     
     try {
         // 1. ADIM: Email kontrolü (Zaten güvenliydi, aynen kalsın)
-        const check_etme = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        const check_etme = await pool.query("SELECT * FROM users WHERE email = $1 OR username = $2", [email,username]);
         
         if (check_etme.rows.length > 0) {
-            hatalar.push({ hata_mesaji: "Bu kullanıcı halihazırda kayıtlı!" });
+            const mevcutKullanici = check_etme.rows[0];
+
+            if (mevcutKullanici.email === email){
+                hatalar.push({ hata_mesaji: "Bu e-posta zaten kullanımda!" });
+            }
+            if (mevcutKullanici.username === username){
+                hatalar.push({ hata_mesaji: "Bu kullanıcı adı zaten alınmış!" });
+            }
             return res.render("register", { hatalar: hatalar });
         }
 
@@ -192,7 +205,7 @@ app.post('/register',async(req,res)=>{
 
 
 app.get('/upload',requireLogin,(req,res)=>{
-    res.render("upload", { sonuc: null ,songName: ""});
+    res.render("upload", { sonuc: null ,songName: "",loggedInUser: req.session.username});
 });
 
 app.post('/upload', requireLogin, (req, res) => {
@@ -208,10 +221,12 @@ app.post('/upload', requireLogin, (req, res) => {
             return res.render("upload", { 
                 sonuc: "EVET", 
                 songName: req.body.songName || "",
+                loggedInUser: req.session.username,
                 error_mesaji: err.message 
             });
         }
 
+        const currentUser = req.session.username;
         const { songName, action, artistName } = req.body;
 
         // UYGUNLUK SORGULAMA (Check)
@@ -220,12 +235,12 @@ app.post('/upload', requireLogin, (req, res) => {
             try {
                 const result = await poolFlag.query(query);
                 if (result.rows.length > 0) {
-                    res.render("upload", { sonuc: "HAYIR", songName: songName });
+                    res.render("upload", { sonuc: "HAYIR", songName: songName,loggedInUser: currentUser });
                 } else {
-                    res.render("upload", { sonuc: "EVET", songName: songName });
+                    res.render("upload", { sonuc: "EVET", songName: songName,loggedInUser: currentUser });
                 }
             } catch (err) {
-                res.render("upload", { sonuc: "EVET", songName: songName });
+                res.render("upload", { sonuc: "EVET", songName: songName,loggedInUser: currentUser});
             }
         } 
         
@@ -238,13 +253,13 @@ app.post('/upload', requireLogin, (req, res) => {
 
                 // Veritabanına cover_image'ı da ekleyerek kaydet
                 const insertQuery = `INSERT INTO songs (song_title, artist, is_released, cover_image) VALUES ($1, $2, TRUE, $3)`;
-                await pool.query(insertQuery, [songName, artistName, coverFileName]);
+                await pool.query(insertQuery, [songName, currentUser, coverFileName]);
                 
-                console.log(`[BAŞARILI] ${artistName} - ${songName} (${coverFileName}) kaydedildi.`);
+                console.log(`[BAŞARILI] ${currentUser} kullanıcısı ${songName} şarkısını yükledi.`);
                 res.redirect('/home');
             } catch (err) {
                 console.error("Kayıt Hatası:", err.message);
-                res.render("upload", { sonuc: "HAYIR", songName: songName, error_mesaji: "Veritabanına kaydedilemedi!" });
+                res.render("upload", { sonuc: "HAYIR", songName: songName,loggedInUser: currentUser ,error_mesaji: "Veritabanına kaydedilemedi!" });
             }
         }
     });
