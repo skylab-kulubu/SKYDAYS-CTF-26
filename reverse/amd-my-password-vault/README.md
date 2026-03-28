@@ -1,33 +1,56 @@
-# My Password Vault - CTF Challenge Dokumantasyonu
+# My Password Vault
 
-## 1. Soru Meta Verileri
-
-**Soru Adi:** My Password Vault
-
-**Soru Aciklamasi:** Windows'da çözülmesi tavsiye edilir
+---
 
 **Kategori:** Reverse
 
 **Zorluk:** Easy-Medium
 
-**Bayrak:** `SKYDAYS{5eluR-gnir3en1gn3-e5rev3R}`
-
 ---
 
-## 2. Yarışmacıya Verilecek Dosyalar
-    /Executables altındaki amd-my-password-vault.exe dosyası
+## Çözüm
 
-## 3. Yarışmacıya Verilebilecek İpuçları
-    * .exe içeriğine ulaşmak için SingleFileExtractor kullan (Maliyet: %35)
-    * Elde ettiğin .dll dosyasını DnSpy ile incele (Maliyet: %30)
+1. **Teknoloji Belirle:**
+   
+```text
+DIE Engine kullanarak .exe dosyasının hangi teknoloji ile yazıldığını bulalım.
+```
 
-## 4. Çözüm Video
-[Drive](https://drive.google.com/drive/folders/1UoWB8aE93xPvIwPt2QWSKykFjU_4g2FR?usp=sharing)
+![Bayrak dnspy_1](images/die.png)
 
-## 5. Çözüm
-	* Yarışmacı DIE ile .NET Framework olduğunu keşfeder
-    * Yarışmacı SingleFileExtractor ile exe dosyasını açar
-    * .Çıktılar arasından amd-my-password-vault.dll dosyasını DnSpy ile inceler
-    * .exe içindeki "encryptedPassword" değişkenini ve kullanıcının girdiği şifre verisinin ToBase64 ile şifrelendiğini görür. (Compile/Decompile durumuna göre değişken olarak değil direk if koşulu içinde olabilir)
-    * CyberChef'de FromBase64 ile "encryptedPassword" içeriğini çözer.
-    * .exe'yi çalıştırıp FromBase64 çıktısını girerek flag'e ulaşır.
+2. **İçeriği Oku:**
+   
+```text
+.NET kullanıldığını öğrendik. DnSpy kullanarak içeriğie bakmayı deneyebiliriz.
+```
+
+![Bayrak dnspy_1](images/dnspy_1.png)
+
+3. **Dosyayı Aç:**
+   
+```text
+DnSpy ile içeriği görüntülüyemediğimize göre .exe dosyasını açmamız lazım. Bu işlem için SingleFileExtractor'ı kullanabiliriz.
+```
+
+```sh
+dotnet tool install -g sfextract
+sfextract .\amd-my-password-vault.exe --output tmp
+```
+
+![Bayrak dnspy_1](images/sfe.png)
+
+4. **.dll Dosyasını İncele:**
+
+![Bayrak dnspy_1](images/dnspy_2.png)
+
+5. **Şifreyi Çöz:**
+   
+```text
+Kullanıcıdan beklenen input'un base64 ile şifrelenmiş halinin aioyS2EyUC12M20wZHcqOQ== olduğunu gördük. Şifreyi elde edelim.
+```
+
+![Bayrak dnspy_1](images/cyber_chef.png)
+
+6. **Flag'i Al:**
+
+![Bayrak dnspy_1](images/flag.png)
