@@ -7,13 +7,15 @@ services:
     container_name: ctf_ai_bot
     ports:
       - "8080:8080"
-    environment:
-      - PYTHONUNBUFFERED=1
     env_file:
       - .env
     networks:
-      - ctf-network
-  # 2. Aşama: Mock AWS IMDS Sunucusu
+      ctf_network:
+        ipv4_address: 169.254.169.10
+    depends_on:
+      - elasticsearch
+
+  # 2. Aşama: Senin Şaheserin (Mock AWS IMDS Sunucusu)
   mock-aws-metadata:
     image: nginx:alpine
     container_name: mock_imds
@@ -21,9 +23,11 @@ services:
       - ./mock-imds/html:/usr/share/nginx/html:ro
       - ./mock-imds/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
-      ctf-network:
+      ctf_network:
+        ipv4_address: 169.254.169.254
         aliases:
           - aws-metadata.internal
+
   # 3. Aşama: Gerçek ELK Yığını (Log Avı İçin)
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.22
@@ -31,39 +35,38 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms4g -Xmx4g
-      - action.destructive_requires_name=true
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g  # RAM'i 1GB'a çıkardık, çökmesini engeller
     ports:
-      - "9200"
+      - "9200:9200"
     networks:
-      - ctf-network
+      - ctf_network
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.22
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      # NGINX ile subdomain kullanacağımız için burayı alan adınla değiştirdik:
-      - SERVER_PUBLICBASEURL=https://kibana.skydays.ctf
+      - SERVER_PUBLICBASEURL=http://16.16.162.214:5601 #forwarding hatası almamak için ekledik
     ports:
-      - "5601"
+      - "5601:5601"
     depends_on:
       - elasticsearch
     networks:
-      - ctf-network
+      - ctf_network
 
   log_seeder:
     image: python:3.9-slim
     container_name: log_seeder
     volumes:
       - ./seed_logs.py:/app/seed_logs.py
-    # Kütüphane eksikliğini giderdik
-    command: sh -c "pip install requests 'elasticsearch>=7.0.0,<8.0.0' && python /app/seed_logs.py"
+    command: sh -c "pip install requests && python /app/seed_logs.py"
     depends_on:
       - elasticsearch
     networks:
-      - ctf-network
-
+      - ctf_network
 networks:
-  ctf-network:
-    external: true
+  ctf_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 169.254.169.0/24
