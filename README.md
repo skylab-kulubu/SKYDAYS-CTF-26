@@ -2,6 +2,14 @@
 
 ![diagram](ctf-utils/SKYDAYS.jpg)
 
+## Active Directory
+
+- [DoubleFact](Active-Directory/DoubleFact-Writeup.md)
+
+## Cloud
+
+- [Admin By Mistake](cloud/admin-by-mistake)
+
 ## Crypto
 
 - [Nihilist Penguin](crypto/Nihilist%20Penguin)
@@ -16,6 +24,7 @@
 - [FileVault](misc/FileVault)
 - [misc-fe-enc](misc/misc-fe-enc)
 - [skysec-inventory](misc/skysec-inventory)
+- [Marauders Footprints](misc/Marauders-Footprints)
 
 ## OSINT
 
@@ -48,5 +57,3 @@
 ## Windows
 - [Mirage-FullPwn](Windows/Mirage-Fullpwn)
 
-## Active Directory
-- [DoubleFact](Active-Directory/DoubleFact-Writeup.md)
