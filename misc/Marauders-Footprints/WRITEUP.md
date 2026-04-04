@@ -1,9 +1,3 @@
-Kategori: OSINT / Steganografi / Network Analizi
-Zorluk Seviyesi: Hard
-
-Bu challenge; yarışmacıların Unicode manipülasyonu, versiyon kontrol sistemleri (Git) istihbaratı, açık kaynak tarihi araştırması, steganografi, ağ trafiği analizi ve geolocation (API) becerilerini test eden çok adımlı bir senaryodur.
-
----
 
 ### Adım 1: Zero-Width Character (ZWC) ve Custom Binary Decode
 
