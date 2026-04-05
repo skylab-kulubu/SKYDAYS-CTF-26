@@ -1,6 +1,5 @@
 # Marauder’s Footprints
 
-**Etkinlik:** SkyDays CTF
 **Kategori:** OSINT / Steganography / Network Analysis
 **Bayrak (Flag):** `SKYDAYS{un1c0d3_t4gs_4nd_d34d_m3n_t4l3s}`
 
