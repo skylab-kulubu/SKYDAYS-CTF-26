@@ -1,7 +1,7 @@
 # 🏴‍☠️ SKYSEC CTF — Vaultline Tech: Project Whisker
 
-> **Difficulty:** Multi-stage | **Category:** Web · Lateral Movement · Privilege Escalation  
-> **Author:** SKYSEC
+> **Difficulty:** Multi-stage | **Category:** FullPWN · Lateral Movement · Privilege Escalation  
+> **Author:** Elina
 
 ---
 
